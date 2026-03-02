@@ -5,95 +5,115 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { margin: 0; background-color: #f0f2f5; font-family: -apple-system, sans-serif; display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; }
-        nav { padding: 15px; display: flex; justify-content: center; background: #fff; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 0.8rem; font-weight: 600; z-index: 10; }
+        :root { --accent: #3b82f6; --bg: #f0f2f5; }
+        body { margin: 0; background-color: var(--bg); font-family: -apple-system, sans-serif; display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; }
         
-        .container { flex: 1; display: flex; align-items: center; justify-content: center; gap: 25px; padding: 40px; flex-wrap: wrap; }
-        .card { background: white; padding: 35px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; width: 280px; }
+        /* Top Center Versioning */
+        nav { padding: 15px; display: flex; justify-content: center; background: #fff; border-bottom: 1px solid #e2e8f0; z-index: 10; }
+        .version-tag { font-family: monospace; font-size: 0.75rem; color: var(--accent); font-weight: bold; background: #eff6ff; padding: 4px 12px; border-radius: 20px; border: 1px solid #dbeafe; }
+
+        .container { flex: 1; display: flex; align-items: center; justify-content: center; gap: 30px; padding: 40px; }
         
-        h2 { margin: 0; font-size: 1.4rem; color: #1a1a1a; }
-        p { color: #64748b; font-size: 0.85rem; margin: 10px 0 25px; }
+        /* The Clean Card Style */
+        .card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; width: 280px; transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); }
+        h2 { margin: 0; font-size: 1.5rem; color: #111827; }
+        p { color: #6b7280; font-size: 0.9rem; margin: 10px 0 30px; }
         
-        .btn-launch { background-color: #007bff; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 700; cursor: pointer; width: 100%; text-transform: uppercase; font-size: 0.8rem; }
-        .btn-launch:hover { background-color: #0056b3; }
+        .btn-launch { background-color: var(--accent); color: white; border: none; padding: 14px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; font-size: 0.9rem; }
 
         /* Fullscreen Stage */
         #stage { display: none; position: fixed; inset: 0; background: #000; z-index: 1000; }
         
-        /* The "Clean" Loading Shield */
-        #boot-shield {
-            position: absolute;
-            inset: 0;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 1005;
-            transition: opacity 0.5s ease;
+        /* Better Loading Screen */
+        #boot-screen {
+            position: absolute; inset: 0; background: #0b0c10; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 1005; color: white;
         }
+        .load-title { font-family: monospace; font-size: 1.2rem; letter-spacing: 4px; margin-bottom: 20px; color: var(--accent); }
+        .progress-container { width: 300px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
+        #progress-fill { width: 0%; height: 100%; background: var(--accent); transition: width 0.3s; }
+        .status-text { margin-top: 15px; font-size: 0.7rem; color: #4b5563; text-transform: uppercase; letter-spacing: 1px; }
 
-        .loader-text { color: #007bff; font-family: monospace; font-size: 1.2rem; letter-spacing: 2px; margin-bottom: 10px; }
-        .loader-sub { color: #4b5563; font-size: 0.8rem; font-family: sans-serif; }
-
-        .overlay-ui { position: absolute; top: 20px; left: 20px; z-index: 1010; }
-        .exit-btn { color: white; text-decoration: none; background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 5px; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.3); cursor: pointer; }
+        .exit-btn { position: absolute; top: 20px; left: 20px; z-index: 1010; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 8px 16px; border-radius: 6px; cursor: pointer; }
         
-        iframe { width: 100%; height: 100%; border: none; background: #000; }
+        canvas { width: 100%; height: 100%; display: block; }
     </style>
 </head>
 <body>
 
-    <nav>BUILD_v1.1.0</nav>
+    <nav><div class="version-tag">BUILD_v1.1.2</div></nav>
 
     <div class="container" id="hub">
         <div class="card">
             <h2>Granny</h2>
-            <p>Survival Horror Simulation</p>
-            <button class="btn-launch" onclick="boot('granny')">Launch</button>
+            <p>Direct Asset Injection (v1.8)</p>
+            <button class="btn-launch" onclick="bootGranny()">Launch</button>
         </div>
         <div class="card">
             <h2>Space Waves</h2>
-            <p>Geometric Arcade Protocol</p>
-            <button class="btn-launch" onclick="boot('spacewaves')">Launch</button>
+            <p>Geometric Arcade</p>
+            <button class="btn-launch" onclick="bootSpace()">Launch</button>
         </div>
     </div>
 
     <div id="stage">
-        <div class="overlay-ui"><button class="exit-btn" onclick="location.reload()">← BACK TO LIBRARY</button></div>
+        <button class="exit-btn" onclick="location.reload()">← BACK</button>
         
-        <div id="boot-shield">
-            <div class="loader-text">INITIALIZING SYSTEM...</div>
-            <div class="loader-sub">Synchronizing assets and bypassing local blocks</div>
+        <div id="boot-screen">
+            <div class="load-title">INITIALIZING SYSTEM</div>
+            <div class="progress-container"><div id="progress-fill"></div></div>
+            <div id="status-label" class="status-text">Merging Data Segments...</div>
         </div>
 
-        <div id="game-mount" style="width:100%; height:100%;"></div>
+        <div id="mount" style="width:100%; height:100%;"></div>
     </div>
 
     <script>
-        // Kill the YaGames errors immediately
-        window.YaGames = { init: () => Promise.resolve({ deviceInfo: {type: 'desktop'}, adv: {showFullscreenAdv: () => {}} }) };
+        const fill = document.getElementById('progress-fill');
+        const label = document.getElementById('status-label');
 
-        function boot(id) {
+        async function mergeFiles(baseUrl, prefix, parts, ext) {
+            const buffers = [];
+            for (let i = 1; i <= parts; i++) {
+                const res = await fetch(`${baseUrl}/${prefix}_part${i}.${ext}`);
+                if (!res.ok) throw new Error("Part Failed");
+                buffers.push(await res.arrayBuffer());
+                fill.style.width = ((i / parts) * 50) + "%"; // First 50% for downloading
+            }
+            const combined = new Uint8Array(buffers.reduce((a, b) => a + b.byteLength, 0));
+            let offset = 0;
+            buffers.forEach(b => { combined.set(new Uint8Array(b), offset); offset += b.byteLength; });
+            return combined;
+        }
+
+        function bootGranny() {
             document.getElementById('hub').style.display = 'none';
             document.querySelector('nav').style.display = 'none';
             document.getElementById('stage').style.display = 'block';
-            const mount = document.getElementById('game-mount');
-            const shield = document.getElementById('boot-shield');
+            
+            const canvas = document.createElement('canvas');
+            document.getElementById('mount').appendChild(canvas);
 
-            // Set the game source
-            if (id === 'granny') {
-                mount.innerHTML = `<iframe id="game-frame" src="https://ext-6204786.extreme-games.io/6204786/c6f9f8c6-ba46-43bc-9c69-273ee44e0808/" allow="autoplay; fullscreen; gamepad"></iframe>`;
-            } else {
-                mount.innerHTML = `<iframe id="game-frame" src="https://space-waves.co/game/space-waves/" allow="autoplay; fullscreen"></iframe>`;
-            }
+            const buildUrl = "https://cdn.jsdelivr.net/gh/gru6nny/ohd@main/Build";
+            
+            (async () => {
+                try {
+                    const data = await mergeFiles(buildUrl, "Granny", 2, "data");
+                    const wasm = await mergeFiles(buildUrl, "Granny", 2, "wasm");
+                    
+                    const dataUrl = URL.createObjectURL(new Blob([data]));
+                    const wasmUrl = URL.createObjectURL(new Blob([wasm]));
 
-            // Keep our custom loader visible for 6 seconds while the "ugly" ones finish in the background
-            setTimeout(() => {
-                shield.style.opacity = '0';
-                setTimeout(() => { shield.style.display = 'none'; }, 500);
-            }, 6000);
-        }
-    </script>
-</body>
-</html>
+                    const script = document.createElement("script");
+                    script.src = buildUrl + "/Granny.loader.js";
+                    script.onload = () => {
+                        createUnityInstance(canvas, {
+                            dataUrl: dataUrl,
+                            frameworkUrl: buildUrl + "/Granny.framework.js",
+                            codeUrl: wasmUrl,
+                            streamingAssetsUrl: "https://cdn.jsdelivr.net/gh/gru6nny/ohd@main/StreamingAssets",
+                            companyName: "DVloper", productName: "Granny",
+                        }, (p) => {
+                            fill.style.width = (50 + (p * 50)) + "%";
+                            label.innerText = "Compiling WebGL: " + Math.round(p
