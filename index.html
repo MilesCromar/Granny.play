@@ -1,68 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Library</title>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Project | Home</title>
     <style>
-        /* Unified Dark Theme */
-        body { 
-            margin: 0; 
-            background: #0a0a0a; 
-            font-family: -apple-system, sans-serif; 
-            display: flex; 
-            flex-direction: column; 
-            height: 100vh; 
-            overflow: hidden; 
-            color: #fff;
+        :root {
+            --primary: #2563eb;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --accent: #f59e0b;
         }
-        
-        /* Matching Nav */
-        nav { 
-            padding: 15px; 
-            display: flex; 
-            justify-content: center; 
-            background: #000; 
-            border-bottom: 1px solid #1a1a1a; 
-        }
-        .v { font-family: monospace; font-size: 10px; color: #3b82f6; opacity: 0.7; }
 
-        .hub { flex: 1; display: flex; align-items: center; justify-content: center; gap: 20px; }
-        
-        /* The Card now matches the Stage */
-        .card { 
-            background: #111; 
-            padding: 30px; 
-            border-radius: 4px; 
-            border: 1px solid #222;
-            text-align: center; 
-            width: 220px; 
-            transition: border 0.3s;
+        body {
+            margin: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
         }
-        .card:hover { border-color: #3b82f6; }
-        h2 { margin: 0 0 20px; font-size: 18px; font-weight: 500; letter-spacing: 1px; }
-        
-        button { 
-            background: transparent; 
-            color: #3b82f6; 
-            border: 1px solid #3b82f6; 
-            padding: 10px; 
-            border-radius: 2px; 
-            cursor: pointer; 
-            width: 100%; 
-            font-weight: bold; 
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: 1px;
-            transition: 0.2s;
-        }
-        button:hover { background: #3b82f6; color: #000; }
 
-        /* Stage Overlay */
-        #stage { display: none; position: fixed; inset: 0; background: #000; z-index: 100; }
-        
-        #loading {
-            position: absolute; inset: 0; background: #000; display: flex; 
-            align-items: center; justify-content: center; z-index: 110; color: #fff;
-            font-family: monospace; font-size: 14px; letter-spacing: 2px;
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
+
+        .logo { font-weight: 800; font-size: 1.5rem; color: var(--primary); }
+
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        
+        .nav-links a { 
+            text-decoration: none; 
+            color: var(--dark); 
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 100px 10%;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+        }
+
+        .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--dark);
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover { transform: scale(1.05); }
+
+        /* Content Grid */
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .nav-links { display: none; } /* Simplified for example */
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">BRAND</div>
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <h1>Welcome to My Website</h1>
+        <p>A minimalist template for your next big idea.</p>
+        <br>
+        <a href="#explore" class="btn">Get Started</a>
+    </header>
+
+    <main class="container" id="explore">
+        <div class="card">
+            <h3>Feature One</h3>
+            <p>High performance and clean code using modern CSS techniques.</p>
+        </div>
+        <div class="card">
+            <h3>Feature Two</h3>
+            <p>Fully responsive design that looks great on mobile and desktop.</p>
+        </div>
+        <div class="card">
+            <h3>Feature Three</h3>
+            <p>Lightweight architecture with zero external dependencies.</p>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 Your Name. Built with precision.
+    </footer>
+
+</body>
+</html>
