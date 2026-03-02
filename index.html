@@ -1,129 +1,146 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-    <title>Granny - Original</title>
+    <title>Granny | Play Now</title>
     <meta charset="utf-8">
-    <meta name="robots" content="noindex, nofollow">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             margin: 0;
             padding: 0;
-            overflow: hidden;
-            background-color: #000; /* Original games always start with pure black */
-            font-family: 'Courier New', Courier, monospace;
-        }
-        #unity-container {
-            position: absolute;
-            width: 100%;
-            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
-        #unity-canvas {
-            width: 100%;
-            height: 100%;
-            background: #000;
+
+        #game-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            width: 90%;
+            max-width: 450px;
         }
-        #unity-loading-bar {
-            position: absolute;
-            display: flex;
+
+        h1 { margin-top: 0; font-size: 2rem; color: #000; font-weight: 700; }
+        p { color: #4b5563; font-size: 1.1rem; margin-bottom: 30px; }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary:hover { background-color: #0056b3; }
+
+        #unity-container { display: none; width: 100vw; height: 100vh; background: #000; }
+        #unity-canvas { width: 100%; height: 100%; }
+        
+        #loading-overlay {
+            position: fixed;
+            color: white;
+            display: none;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
-        }
-        /* Classic minimalist loading text instead of a modern green bar */
-        #loading-text {
-            color: #fff;
-            font-size: 1.5rem;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-        }
-        #unity-progress-bar-empty {
-            width: 250px;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.2);
-        }
-        #unity-progress-bar-full {
-            width: 0%;
-            height: 100%;
-            background: #fff; /* White bar is more "classic" than green */
-            transition: width 0.3s ease;
         }
     </style>
 </head>
 <body>
+
+    <div id="game-card">
+        <h1>Granny</h1>
+        <p>Your <b>index.html</b> is working. Ready to escape?</p>
+        <button class="btn-primary" id="start-button">Click Me</button>
+    </div>
+
     <div id="unity-container">
+        <div id="loading-overlay">LOADING...</div>
         <canvas id="unity-canvas"></canvas>
-        <div id="unity-loading-bar">
-            <div id="loading-text">LOADING...</div>
-            <div id="unity-progress-bar-empty">
-                <div id="unity-progress-bar-full"></div>
-            </div>
-        </div>
     </div>
 
     <script>
-        // CORE GAME LOADING - AD-FREE
-        const buildUrl = "https://cdn.jsdelivr.net/gh/gru6nny/ohd@main/Build";
-        const loaderUrl = buildUrl + "/Granny.loader.js";
-        const canvas = document.querySelector("#unity-canvas");
-        const loadingBar = document.querySelector("#unity-loading-bar");
-        const progressBarFull = document.querySelector("#unity-progress-bar-full");
-
-        // Helper to fetch and merge game files without tracking/ad scripts
-        async function mergeUnityWebFiles(baseUrl, filePrefix, totalParts, extension) {
-            const buffers = [];
-            for (let i = 1; i <= totalParts; i++) {
-                const response = await fetch(`${baseUrl}/${filePrefix}_part${i}.${extension}`);
-                if (!response.ok) throw new Error(`Asset part missing`);
-                buffers.push(await response.arrayBuffer());
+        // --- THE FIX: MOCK YANDEX SDK ---
+        // This stops the "YaGames is not defined" error
+        window.YaGames = {
+            init: function() {
+                return new Promise((resolve) => {
+                    console.log("Mock Yandex SDK Initialized");
+                    resolve({
+                        deviceInfo: { type: "desktop" },
+                        adv: { showFullscreenAdv: () => {}, showRewardedVideo: () => {} }
+                    });
+                });
             }
-            const totalLength = buffers.reduce((acc, b) => acc + b.byteLength, 0);
-            const combined = new Uint8Array(totalLength);
-            let offset = 0;
-            buffers.forEach(b => {
-                combined.set(new Uint8Array(b), offset);
-                offset += b.byteLength;
-            });
-            return combined;
-        }
+        };
 
-        async function startOriginalGranny() {
+        const startBtn = document.getElementById('start-button');
+        const gameCard = document.getElementById('game-card');
+        const unityContainer = document.getElementById('unity-container');
+        const canvas = document.querySelector("#unity-canvas");
+
+        startBtn.addEventListener('click', () => {
+            gameCard.style.display = 'none';
+            unityContainer.style.display = 'flex';
+            unityContainer.style.justifyContent = 'center';
+            unityContainer.style.alignItems = 'center';
+            loadGranny();
+        });
+
+        async function loadGranny() {
+            const buildUrl = "https://cdn.jsdelivr.net/gh/gru6nny/ohd@main/Build";
+            
+            async function mergeFiles(prefix, parts, ext) {
+                const buffers = [];
+                for (let i = 1; i <= parts; i++) {
+                    const res = await fetch(`${buildUrl}/${prefix}_part${i}.${ext}`);
+                    if(!res.ok) throw new Error("Asset part missing");
+                    buffers.push(await res.arrayBuffer());
+                }
+                const combined = new Uint8Array(buffers.reduce((a, b) => a + b.byteLength, 0));
+                let offset = 0;
+                buffers.forEach(b => { combined.set(new Uint8Array(b), offset); offset += b.byteLength; });
+                return combined;
+            }
+
             try {
-                // Fetching the game data
-                const [dataBuffer, wasmBuffer] = await Promise.all([
-                    mergeUnityWebFiles(buildUrl, "Granny", 2, "data"),
-                    mergeUnityWebFiles(buildUrl, "Granny", 2, "wasm")
+                const [data, wasm] = await Promise.all([
+                    mergeFiles("Granny", 2, "data"),
+                    mergeFiles("Granny", 2, "wasm")
                 ]);
 
                 const config = {
-                    dataUrl: URL.createObjectURL(new Blob([dataBuffer])),
+                    dataUrl: URL.createObjectURL(new Blob([data])),
                     frameworkUrl: buildUrl + "/Granny.framework.js",
-                    codeUrl: URL.createObjectURL(new Blob([wasmBuffer])),
+                    codeUrl: URL.createObjectURL(new Blob([wasm])),
                     streamingAssetsUrl: "https://cdn.jsdelivr.net/gh/gru6nny/ohd@main/StreamingAssets",
-                    companyName: "DVloper", // Corrected to the original developer name
+                    companyName: "DVloper",
                     productName: "Granny",
-                    productVersion: "1.0",
                 };
 
                 const script = document.createElement("script");
-                script.src = loaderUrl;
+                script.src = buildUrl + "/Granny.loader.js";
                 script.onload = () => {
                     createUnityInstance(canvas, config, (progress) => {
-                        progressBarFull.style.width = (100 * progress) + "%";
-                    }).then((instance) => {
-                        loadingBar.style.display = "none";
+                        // Progress logic can go here
+                    }).then(() => {
+                        console.log("Granny Loaded Successfully");
                     });
                 };
                 document.body.appendChild(script);
-            } catch (e) {
-                console.error("Original load failed", e);
+            } catch (err) {
+                console.error("Critical Load Error:", err);
             }
         }
-
-        startOriginalGranny();
     </script>
 </body>
 </html>
