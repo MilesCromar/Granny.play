@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Granny | Escape</title>
     <style>
-        /* --- Clean & Calm Theme --- */
+        /* --- Dark & Muted Theme --- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
         }
 
         body {
-            /* Deep charcoal to black gradient */
             background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
             height: 100vh;
             display: flex;
@@ -25,7 +24,6 @@
             overflow: hidden;
         }
 
-        /* Bold text in the middle */
         .header-text {
             text-align: center;
             margin-bottom: 80px;
@@ -37,27 +35,28 @@
             text-transform: uppercase;
             font-weight: 800;
             color: #ffffff;
-            opacity: 0.9;
+            opacity: 0.8;
         }
 
         .header-text p {
-            color: #444;
+            color: #333;
             letter-spacing: 5px;
             font-size: 0.75rem;
             margin-top: 10px;
         }
 
-        /* --- Clean Card Layout --- */
+        /* --- Smooth Tilt Cards --- */
         .card-container {
             display: flex;
-            gap: 30px;
+            gap: 40px;
+            perspective: 1000px;
         }
 
         .game-card {
-            background: rgba(255, 255, 255, 0.02); /* Very faint gray */
-            width: 260px;
-            height: 340px;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            width: 280px;
+            height: 380px;
+            border-radius: 15px;
             border: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             flex-direction: column;
@@ -65,23 +64,29 @@
             align-items: center;
             padding: 30px;
             cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Super smooth movement */
+            
+            /* High-end 3D Settings */
+            transform-style: preserve-3d;
+            transition: border-color 0.5s ease, background 0.5s ease;
         }
 
-        /* Nonchalant Hover: Subtle lift and navy glow */
         .game-card:hover {
-            transform: translateY(-8px);
-            background: rgba(0, 31, 63, 0.15); /* Faint navy tint */
-            border-color: rgba(0, 116, 217, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            background: rgba(0, 31, 63, 0.1);
+            border-color: rgba(0, 116, 217, 0.2);
+        }
+
+        /* Content "floating" inside the tilt */
+        .card-content {
+            transform: translateZ(30px); /* Subtly pops forward */
+            text-align: center;
         }
 
         .card-content h2 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: #888;
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            color: #666;
             letter-spacing: 2px;
-            transition: color 0.4s;
+            transition: color 0.5s ease;
         }
 
         .game-card:hover h2 {
@@ -91,33 +96,26 @@
         /* --- Nonchalant Buttons --- */
         .play-btn {
             background: transparent;
-            color: #555;
-            padding: 8px 20px;
+            color: #444;
+            padding: 10px 24px;
             text-decoration: none;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             letter-spacing: 1px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 4px;
-            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            transition: all 0.5s ease;
         }
 
         .game-card:hover .play-btn {
-            color: #0074D9; /* Navy blue accent on hover */
+            color: #0074D9;
             border-color: #0074D9;
             background: rgba(0, 116, 217, 0.05);
         }
 
-        /* Locked State */
         .locked {
-            opacity: 0.2;
+            opacity: 0.25;
             cursor: default;
-        }
-        
-        .locked:hover {
-            transform: none;
-            background: rgba(255, 255, 255, 0.02);
-            border-color: rgba(255, 255, 255, 0.05);
         }
     </style>
 </head>
@@ -125,24 +123,36 @@
 
     <div class="header-text">
         <h1>GRANNY</h1>
-        <p>QUIET IS SURVIVAL</p>
+        <p>STAY QUIET</p>
     </div>
 
     <div class="card-container">
-        <div class="game-card">
+        <div class="game-card" data-tilt>
             <div class="card-content">
                 <h2>HOUSE</h2>
                 <a href="#" class="play-btn">ENTER</a>
             </div>
         </div>
 
-        <div class="game-card locked">
+        <div class="game-card locked" data-tilt>
             <div class="card-content">
                 <h2>ASYLUM</h2>
                 <a href="#" class="play-btn">LOCKED</a>
             </div>
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+    <script>
+        VanillaTilt.init(document.querySelectorAll(".game-card"), {
+            max: 5,           // Very low tilt (prevents startling)
+            speed: 2000,      // Very slow transition (slow motion feel)
+            glare: true,      // Keeps the "reflective" look
+            "max-glare": 0.15, // Muted glare
+            perspective: 1000,
+            scale: 1.02       // Tiny bit of zoom on hover
+        });
+    </script>
 
 </body>
 </html>
