@@ -3,143 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Granny | Minimal Play</title>
+    <title>Granny | Escape the House</title>
     <style>
-        :root {
-            --primary: #2563eb;
-            --dark: #111;
-            --light: #f8fafc;
-            --accent: #f59e0b;
+        /* --- CSS STYLING --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial Black', Gadget, sans-serif;
         }
 
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #111; color: #fff; overflow: hidden;
+        body {
+            /* Black to Dark Gray Gradient */
+            background: radial-gradient(circle, #1a1a1a 0%, #050505 100%);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow: hidden;
         }
 
-        #unity-container { width: 100%; height: 100%; position: relative; background: #000; }
-        canvas { width: 100%; height: 100%; display: block; }
+        .header-text {
+            text-align: center;
+            margin-bottom: 50px;
+        }
 
-        /* Fullscreen Button */
-        #fs-btn {
-            position: fixed; bottom: 20px; right: 20px; z-index: 99;
-            background: rgba(255,255,255,0.1); color: #fff;
-            border: 1px solid rgba(255,255,255,0.2); padding: 8px 15px;
-            border-radius: 4px; cursor: pointer; font-size: 12px;
-            text-transform: uppercase; letter-spacing: 1px;
-            transition: all 0.3s; backdrop-filter: blur(5px);
+        .header-text h1 {
+            font-size: 5rem;
+            letter-spacing: 12px;
+            text-transform: uppercase;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
-        #fs-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); }
 
-        /* Loading Overlay */
-        #loading-overlay {
-            position: absolute; inset: 0; background: #111;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 100; transition: opacity 0.5s;
+        .header-text p {
+            font-family: 'Arial', sans-serif;
+            color: #666;
+            letter-spacing: 2px;
+            margin-top: -10px;
         }
-        .spinner {
-            width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1);
-            border-top: 4px solid var(--accent); border-radius: 50%;
-            animation: spin 1s linear infinite; margin-bottom: 20px;
+
+        /* --- CARD LAYOUT --- */
+        .card-container {
+            display: flex;
+            gap: 30px;
+            perspective: 1000px; /* Essential for 3D depth */
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .game-card {
+            background: #001f3f; /* Navy Blue */
+            width: 280px;
+            height: 380px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            cursor: pointer;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            
+            /* High-end 3D Effect Settings */
+            transform-style: preserve-3d;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .game-card:hover {
+            box-shadow: 0 30px 60px rgba(0, 31, 63, 0.5);
+        }
+
+        /* Content inside the card that "pops" out */
+        .card-content {
+            transform: translateZ(60px); 
+            text-align: center;
+        }
+
+        .card-content h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .card-content p {
+            font-family: 'Arial', sans-serif;
+            font-size: 0.9rem;
+            color: #bdc3c7;
+            margin-bottom: 25px;
+        }
+
+        .play-btn {
+            background: #ffffff;
+            color: #001f3f;
+            padding: 12px 30px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+
+        .play-btn:hover {
+            background: #0074D9;
+            color: white;
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body>
 
-    <div id="unity-container">
-        <div id="loading-overlay">
-            <div class="spinner"></div>
-            <div id="load-status">Merging Game Files...</div>
-        </div>
-        
-        <canvas id="unity-canvas"></canvas>
-        <button id="fs-btn">Fullscreen</button>
+    <div class="header-text">
+        <h1>GRANNY</h1>
+        <p>SHE HEARS EVERYTHING.</p>
     </div>
 
+    <div class="card-container">
+        <div class="game-card" data-tilt data-tilt-max="15" data-tilt-glare data-tilt-max-glare="0.4">
+            <div class="card-content">
+                <h2>CHAPTER 1</h2>
+                <p>The Original Horror. Can you survive 5 nights in the house?</p>
+                <a href="#" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+
+        <div class="game-card" data-tilt data-tilt-max="15" data-tilt-glare data-tilt-max-glare="0.4">
+            <div class="card-content">
+                <h2>CHAPTER 2</h2>
+                <p>Grandpa has joined the hunt. Double the danger.</p>
+                <a href="#" class="play-btn">LOCKED</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
     <script>
-        // 1. FIX: Mock Yandex SDK to prevent "YaGames is not defined" error
-        window.YaGames = {
-            init: function() {
-                return new Promise((resolve) => {
-                    resolve({
-                        deviceInfo: { type: "desktop" },
-                        environment: { i18n: { lang: "en" } },
-                        adv: { showFullscreenAdv: { callbacks: {} } }
-                    });
-                });
-            }
-        };
+        // Initialize the tilt effect
+        VanillaTilt.init(document.querySelectorAll(".game-card"), {
+            max: 15,
+            speed: 400,
+            glare: true,
+            "max-glare": 0.3,
+        });
+    </script>
 
-        // 2. SDK CONFIG
-        window.SDK_OPTIONS = {
-            gameId: "jp112o3o4hzgrnc7zaewjkrfk282pul8",
-            onEvent: function (a) {
-                if (a.name === "SDK_GAME_PAUSE" && myGameInstance) myGameInstance.SendMessage('AudioManager', 'MuteAudio');
-                if (a.name === "SDK_GAME_START" && myGameInstance) myGameInstance.SendMessage('AudioManager', 'UnmuteAudio');
-            }
-        };
-
-        // 3. GAME ENGINE LOGIC
-        const canvas = document.querySelector("#unity-canvas");
-        const loadingOverlay = document.querySelector("#loading-overlay");
-        const loadStatus = document.querySelector("#load-status");
-        const buildUrl = "https://cdn.jsdelivr.net/gh/gru6nny/ohd@main/Build";
-        let myGameInstance = null;
-
-        async function mergeUnityWebFiles(baseUrl, filePrefix, totalParts, extension) {
-            const buffers = [];
-            for (let i = 1; i <= totalParts; i++) {
-                const response = await fetch(`${baseUrl}/${filePrefix}_part${i}.${extension}`);
-                if (!response.ok) throw new Error("Failed to load part " + i);
-                buffers.push(await response.arrayBuffer());
-            }
-            const combined = new Uint8Array(buffers.reduce((acc, b) => acc + b.byteLength, 0));
-            let offset = 0;
-            buffers.forEach(b => { combined.set(new Uint8Array(b), offset); offset += b.byteLength; });
-            return combined;
-        }
-
-        async function initializeGame() {
-            try {
-                // Load and merge binary data
-                const [dataBuffer, wasmBuffer] = await Promise.all([
-                    mergeUnityWebFiles(buildUrl, "Granny", 2, "data"),
-                    mergeUnityWebFiles(buildUrl, "Granny", 2, "wasm")
-                ]);
-
-                loadStatus.innerText = "Starting Engine...";
-
-                const config = {
-                    dataUrl: URL.createObjectURL(new Blob([dataBuffer])),
-                    frameworkUrl: buildUrl + "/Granny.framework.js",
-                    codeUrl: URL.createObjectURL(new Blob([wasmBuffer])),
-                    streamingAssetsUrl: "https://cdn.jsdelivr.net/gh/gru6nny/ohd@main/StreamingAssets",
-                    companyName: "Anastasia Kazantseva",
-                    productName: "Granny",
-                    productVersion: "1.0",
-                };
-
-                const script = document.createElement("script");
-                script.src = buildUrl + "/Granny.loader.js";
-                script.onload = () => {
-                    createUnityInstance(canvas, config, (progress) => {
-                        loadStatus.innerText = "Loading: " + Math.round(progress * 100) + "%";
-                    }).then((instance) => {
-                        myGameInstance = instance;
-                        loadingOverlay.style.opacity = "0";
-                        setTimeout(() => loadingOverlay.style.display = "none", 500);
-                    });
-                };
-                document.body.appendChild(script);
-            } catch (e) { 
-                loadStatus.innerText = "Error loading game. Check console.";
-                console.error(e); 
-            }
-        }
-
-        // Fullscreen Toggle
-        document.getElementById("fs-btn").onclick = () => {
-            if (canvas.requestFullscreen) canvas.requestFullscreen();
-            else if (canvas.
+</body>
+</html>
