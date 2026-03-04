@@ -1,109 +1,70 @@
-<!DOCTYPE html>
-<html lang="en-us">
-<head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<html lang="en-us"><head></head><body><module>
+<content type="html"><meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player | Granny 2</title>
-    <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/forms-docs-slides-glgl/ngng@main/TemplateData/favicon.ico"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bubbls/ruffle@895d0224580381ddd003fc2ab72afead3cf134ad/john.css"/>
-</head>
-<body>
-    <button id="fullscreen-btn">Go Fullscreen</button>
+    <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/forms-docs-slides-glgl/ngng@main/TemplateData/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/forms-docs-slides-glgl/ngng@main/TemplateData/styles.css">
+    
+    <style>
+        /* This hides the "weird" logo and the ad boxes without touching the code */
+        #unity-logo, #ad-container, .play-with-friends, #unity-warning {
+            opacity: 0 !important;
+            pointer-events: none !important;
+            display: none !important;
+        }
+        
+        /* Dark background for that cool vibe */
+        #unity-loading-bar {
+            background: #000 !important;
+        }
+
+        #unity-progress-bar-full {
+            background: #444 !important;
+        }
+    </style>
+
+    <script id="gamemonetize-sdk" src="https://cdn.jsdelivr.net/gh/testamalame/sef@main/sedk.js"></script>
+    <script type="text/javascript">
+        window.SDK_OPTIONS = {
+            gameId: "jp112o3o4hzgrnc7zaewjkrfk282pul8",
+            onEvent: function (a) {
+                console.log("SDK Event:", a.name);
+            }
+        };
+    </script>
 
     <div id="unity-container" style="position: absolute; width: 100%; height: 100%; left: 0%; top: 0%;">
-        <canvas id="unity-canvas" style="position: absolute; width: 100%; height: 100%"></canvas>
-        <div id="unity-loading-bar">
+        <canvas id="unity-canvas" style="position: absolute; width: 100%; height: 100%; cursor: default;" width="704" height="456"></canvas>
+        <div id="unity-loading-bar" style="display: none;">
             <div id="unity-logo"></div>
             <div id="unity-progress-bar-empty">
-                <div id="unity-progress-bar-full"></div>
+                <div id="unity-progress-bar-full" style="width: 100%;"></div>
             </div>
         </div>
-        <div id="unity-warning"></div>
+        <div id="unity-warning" style="display: none;"> </div>
     </div>
 
     <script>
-        document.getElementById('fullscreen-btn').addEventListener('click', function() {
-            var elem = document.documentElement;
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.mozRequestFullScreen) { // Firefox
-                elem.mozRequestFullScreen();
-            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { // IE/Edge
-                elem.msRequestFullscreen();
-            }
-        });
-
-        YaGames.init().then(ysdk => {
-            console.log('Yandex SDK initialized');
-            window.ysdk = ysdk;
-            initPlayer();
-        });
-
-        var player;
-        function initPlayer() {
-            return ysdk.getPlayer({ scopes: false }).then(_player => {
-                player = _player;
-                return player;
-            });
-        }
-
         var container = document.querySelector("#unity-container");
         var canvas = document.querySelector("#unity-canvas");
         var loadingBar = document.querySelector("#unity-loading-bar");
         var progressBarFull = document.querySelector("#unity-progress-bar-full");
         var warningBanner = document.querySelector("#unity-warning");
 
+        let myGameInstance = null;
+
         function unityShowBanner(msg, type) {
-            function updateBannerVisibility() {
-                warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-            }
-            var div = document.createElement('div');
-            div.innerHTML = msg;
-            warningBanner.appendChild(div);
-            if (type == 'error') div.style = 'background: red; padding: 10px;';
-            else {
-                if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-                setTimeout(function() {
-                    warningBanner.removeChild(div);
-                    updateBannerVisibility();
-                }, 5000);
-            }
-            updateBannerVisibility();
+            // We keep the function but make it do nothing
         }
 
-        let environmentData = {
-            language: "en",
-            domain: "default_domain",
-            deviceType: "desktop",
-            isMobile: false,
-            isDesktop: true,
-            isTablet: false,
-            isTV: false,
-            appID: "default_app_id",
-            browserLang: navigator.language || "en",
-            payload: null,
-            promptCanShow: false,
-            reviewCanShow: false,
-            platform: navigator.platform,
-            browser: (function() {
-                let userAgent = navigator.userAgent;
-                if (userAgent.includes("YaBrowser")) return "Yandex";
-                if (userAgent.includes("OPR") || userAgent.includes("Opera")) return "Opera";
-                if (userAgent.includes("Firefox")) return "Firefox";
-                if (userAgent.includes("MSIE") || userAgent.includes("Trident")) return "IE";
-                if (userAgent.includes("Edge")) return "Edge";
-                if (userAgent.includes("Chrome")) return "Chrome";
-                if (userAgent.includes("Safari")) return "Safari";
-                return "Other";
-            })()
-        };
+        function showAdOnClick() {
+            // Placeholder to prevent errors
+        }
 
         async function mergeFiles(parts, onProgress) {
             let loaded = 0;
             const total = parts.length;
-            const blobs = await Promise.all(parts.map(async (part, index) => {
+            const blobs = await Promise.all(parts.map(async (part) => {
                 const res = await fetch(part);
                 const blob = await res.blob();
                 loaded++;
@@ -116,22 +77,26 @@
         async function initializeGame() {
             var buildUrl = "https://cdn.jsdelivr.net/gh/forms-docs-slides-glgl/ngng@main/Build";
             var loaderUrl = buildUrl + "/Granny 2.loader.js";
+            
             var dataParts = [
-                "https://cdn.jsdelivr.net/gh/forms-docs-slides-glgl/ngng@main/Build/Granny 2_part1.data",
-                "https://cdn.jsdelivr.net/gh/forms-docs-slides-glgl/ngng@main/Build/Granny 2_part2.data",
+                "https://cdn.jsdelivr.net/gh/forms-docs-slides-glgl/ngng@main/Build/Granny 2_part1.data", 
+                "https://cdn.jsdelivr.net/gh/forms-docs-slides-glgl/ngng@main/Build/Granny 2_part2.data", 
                 "https://cdn.jsdelivr.net/gh/forms-docs-slides-glgl/ngng@main/Build/Granny 2_part3.data"
             ];
             var wasmParts = [
-                "https://cdn.jsdelivr.net/gh/forms-docs-slides-glgl/ngng@main/Build/Granny 2_part1.wasm",
+                "https://cdn.jsdelivr.net/gh/forms-docs-slides-glgl/ngng@main/Build/Granny 2_part1.wasm", 
                 "https://cdn.jsdelivr.net/gh/forms-docs-slides-glgl/ngng@main/Build/Granny 2_part2.wasm"
             ];
+            
             loadingBar.style.display = "block";
+            
             var dataUrl = await mergeFiles(dataParts, progress => {
                 progressBarFull.style.width = (50 * progress) + "%";
             });
             var wasmUrl = await mergeFiles(wasmParts, progress => {
                 progressBarFull.style.width = (50 + 50 * progress) + "%";
             });
+            
             var config = {
                 dataUrl: dataUrl,
                 frameworkUrl: buildUrl + "/Granny 2.frameworkx.js",
@@ -142,6 +107,7 @@
                 productVersion: "1.0",
                 showBanner: unityShowBanner,
             };
+            
             var script = document.createElement("script");
             script.src = loaderUrl;
             script.onload = () => {
@@ -149,11 +115,9 @@
                     progressBarFull.style.width = (100 * progress) + "%";
                 }).then((unityInstance) => {
                     myGameInstance = unityInstance;
-                    setTimeout(() => {
-                        loadingBar.style.display = "none";
-                    }, 500);
+                    setTimeout(() => { loadingBar.style.display = "none"; }, 500);
                 }).catch((message) => {
-                    alert(message);
+                    console.error(message);
                 });
             };
             document.body.appendChild(script);
@@ -161,5 +125,7 @@
 
         initializeGame();
     </script>
-</body>
-</html>
+
+]]&gt;</content>
+</module>
+<script src="https://cdn.jsdelivr.net/gh/forms-docs-slides-glgl/ngng@main/Build/Granny 2.loader.js"></script><script src="https://cdn.jsdelivr.net/gh/forms-docs-slides-glgl/ngng@main/Build/Granny 2.frameworkx.js"></script></body></html>
