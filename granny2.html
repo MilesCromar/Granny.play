@@ -7,7 +7,7 @@
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #000; color: white; font-family: sans-serif; }
         #unity-container { position: absolute; width: 100%; height: 100%; }
         #unity-canvas { width: 100%; height: 100%; background: #000; }
-        #status { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        #status { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #444; }
     </style>
 </head>
 <body>
@@ -18,7 +18,6 @@
     </div>
 
     <script>
-        // --- GHOST SDK: Pretends to be the Ad Networks so the game starts ---
         window.SDK_OPTIONS = { gameId: "clean_version", onEvent: () => {} };
         window.YaGames = { init: () => Promise.resolve({ getPlayer: () => Promise.resolve({}) }) };
         window.sdk = { showBanner: () => console.log("Ad Blocked") };
@@ -37,5 +36,35 @@
         async function start() {
             const build = "https://cdn.jsdelivr.net/gh/forms-docs-slides-glgl/ngng@main/Build";
             try {
+                // Ensure these filenames match the repository exactly
                 const [dataUrl, wasmUrl] = await Promise.all([
-                    mergeFiles([`${build}/Granny 2_
+                    mergeFiles([`${build}/Granny 2_web.data`]),
+                    mergeFiles([`${build}/Granny 2_web.wasm`])
+                ]);
+
+                const script = document.createElement("script");
+                script.src = `${build}/Granny 2_web.loader.js`;
+                script.onload = () => {
+                    createUnityInstance(canvas, {
+                        dataUrl: dataUrl,
+                        frameworkUrl: `${build}/Granny 2_web.framework.js`,
+                        codeUrl: wasmUrl,
+                        streamingAssetsUrl: "StreamingAssets",
+                        companyName: "DefaultCompany",
+                        productName: "Granny 2",
+                        productVersion: "1.0",
+                    }).then(() => {
+                        status.style.display = "none";
+                    });
+                };
+                document.body.appendChild(script);
+            } catch (e) {
+                status.innerText = "Error loading archive files.";
+                console.error(e);
+            }
+        }
+
+        start();
+    </script>
+</body>
+</html>
