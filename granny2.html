@@ -4,100 +4,59 @@
     <meta charset="utf-8">
     <title>NULL | Archive</title>
     <style>
-        /* Keeping it clean and black as requested */
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            overflow: hidden; background-color: #000; 
-            font-family: 'Inter', sans-serif;
-        }
-
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Inter', sans-serif; }
         #unity-container { position: absolute; width: 100%; height: 100%; }
         #unity-canvas { width: 100%; height: 100%; background: #000; }
-
-        /* Custom Loading UI - Mimics the original code structure but looks better */
-        #unity-loading-bar { 
-            position: absolute; left: 50%; top: 50%; 
-            transform: translate(-50%, -50%); 
-            display: block; text-align: center;
-        }
-
-        .loader-title {
-            color: #ffffff;
-            font-weight: 900;
-            font-size: 2.5rem;
-            letter-spacing: 15px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            opacity: 0.9;
-        }
-
-        #unity-progress-bar-empty { 
-            width: 300px; height: 2px; background: rgba(255, 255, 255, 0.1); 
-            margin: 0 auto; position: relative;
-        }
-
-        #unity-progress-bar-full { 
-            width: 0%; height: 100%; background: #fff; 
-            box-shadow: 0 0 15px #fff;
-        }
-
-        #status-text {
-            color: #555;
-            font-size: 0.7rem;
-            letter-spacing: 3px;
-            margin-top: 15px;
-            text-transform: uppercase;
-        }
+        #unity-loading-bar { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 10; }
+        .loader-title { color: #fff; font-weight: 900; font-size: 2.5rem; letter-spacing: 15px; margin-bottom: 20px; opacity: 0.9; }
+        #unity-progress-bar-empty { width: 300px; height: 2px; background: rgba(255, 255, 255, 0.1); margin: 0 auto; }
+        #unity-progress-bar-full { width: 0%; height: 100%; background: #fff; box-shadow: 0 0 15px #fff; }
+        #status-text { color: #555; font-size: 0.7rem; letter-spacing: 3px; margin-top: 15px; text-transform: uppercase; }
     </style>
 </head>
 <body>
-
     <div id="unity-container">
         <canvas id="unity-canvas" tabindex="-1"></canvas>
-        
         <div id="unity-loading-bar">
             <div class="loader-title">NULL</div>
-            <div id="unity-progress-bar-empty">
-                <div id="unity-progress-bar-full"></div>
-            </div>
-            <div id="status-text">RETRIEVING ARCHIVE...</div>
+            <div id="unity-progress-bar-empty"><div id="unity-progress-bar-full"></div></div>
+            <div id="status-text">BYPASSING SECURITY...</div>
         </div>
     </div>
 
     <script>
-        // Bypassing Ad SDKs that cause the game to hang on black screens
+        // Use a CORS proxy to prevent "Load Error"
+        const proxy = "https://corsproxy.io/?";
+        const buildUrl = "https://cdn.jsdelivr.net/gh/forms-docs-slides-glgl/ngng@main/Build";
+        
+        // Block annoying SDK popups
         window.YaGames = { init: () => Promise.resolve({ getPlayer: () => Promise.resolve({}) }) };
-        window.SDK_OPTIONS = { gameId: "clean", onEvent: () => {} };
 
         const canvas = document.querySelector("#unity-canvas");
         const loadingBar = document.querySelector("#unity-loading-bar");
         const progressBarFull = document.querySelector("#unity-progress-bar-full");
         const statusText = document.querySelector("#status-text");
 
-        // The URL for the game assets
-        const buildUrl = "https://cdn.jsdelivr.net/gh/forms-docs-slides-glgl/ngng@main/Build";
-        
         const loaderScript = document.createElement("script");
-        loaderScript.src = buildUrl + "/Granny 2_web.loader.js";
+        // Proxy the loader too
+        loaderScript.src = proxy + encodeURIComponent(buildUrl + "/Granny 2_web.loader.js");
 
         loaderScript.onload = () => {
             createUnityInstance(canvas, {
-                dataUrl: buildUrl + "/Granny 2_web.data",
-                frameworkUrl: buildUrl + "/Granny 2_web.framework.js",
-                codeUrl: buildUrl + "/Granny 2_web.wasm",
+                // Every file is wrapped in a proxy to ensure it isn't blocked
+                dataUrl: proxy + encodeURIComponent(buildUrl + "/Granny 2_web.data"),
+                frameworkUrl: proxy + encodeURIComponent(buildUrl + "/Granny 2_web.framework.js"),
+                codeUrl: proxy + encodeURIComponent(buildUrl + "/Granny 2_web.wasm"),
                 streamingAssetsUrl: "StreamingAssets",
                 companyName: "NULL",
                 productName: "Granny 2",
-                productVersion: "1.0",
             }, (progress) => {
-                // Updating the white loading bar
                 progressBarFull.style.width = (100 * progress) + "%";
-            }).then((unityInstance) => {
-                // Game Loaded: Remove the loader
+            }).then(() => {
                 loadingBar.style.display = "none";
-            }).catch((message) => {
-                statusText.innerText = "ACCESS DENIED / LOAD ERROR";
-                console.error(message);
+            }).catch((err) => {
+                statusText.innerText = "SYSTEM REJECTED CONNECTION";
+                console.error(err);
             });
         };
 
