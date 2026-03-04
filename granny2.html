@@ -1,65 +1,27 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html>
 <head>
-    <meta charset="utf-8">
-    <title>NULL | Archive</title>
-    <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Inter', sans-serif; }
-        #unity-container { position: absolute; width: 100%; height: 100%; }
-        #unity-canvas { width: 100%; height: 100%; background: #000; }
-        #unity-loading-bar { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); text-align: center; }
-        .loader-title { color: #fff; font-weight: 900; font-size: 2.5rem; letter-spacing: 15px; margin-bottom: 20px; }
-        #unity-progress-bar-empty { width: 300px; height: 2px; background: rgba(255, 255, 255, 0.1); margin: 0 auto; }
-        #unity-progress-bar-full { width: 0%; height: 100%; background: #fff; box-shadow: 0 0 15px #fff; }
-        #status-text { color: #555; font-size: 0.7rem; letter-spacing: 3px; margin-top: 15px; text-transform: uppercase; }
-    </style>
+    <title>Granny Chapter One</title>
+    <style>body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; }</style>
+    
+    <script src="https://yandex.ru/games/sdk/v2"></script>
 </head>
 <body>
-    <div id="unity-container">
-        <canvas id="unity-canvas"></canvas>
-        <div id="unity-loading-bar">
-            <div class="loader-title">NULL</div>
-            <div id="unity-progress-bar-empty"><div id="unity-progress-bar-full"></div></div>
-            <div id="status-text">FORCING DATA STREAM...</div>
-        </div>
-    </div>
+    <iframe 
+        id="inner-game"
+        src="https://app-307198.games.s3.yandex.net/307198/dh5j5bw8jreyyvj0jgfmsgf434ycwr1w_brotli/index.html?sdk=%2Fsdk%2F_%2Fv2.3520c330047d4543b237.js#origin=https%3A%2F%2Fplayhop.com&app-id=307198&device-type=desktop" 
+        style="width: 100vw; height: 100vh; border: none;"
+        allow="accelerometer; gyroscope; gamepad;"
+        allowfullscreen>
+    </iframe>
 
     <script>
-        // Clean environment
-        window.YaGames = { init: () => Promise.resolve({ getPlayer: () => Promise.resolve({}) }) };
-
-        const buildUrl = "https://cdn.jsdelivr.net/gh/forms-docs-slides-glgl/ngng@main/Build";
-        const canvas = document.querySelector("#unity-canvas");
-        const loadingBar = document.querySelector("#unity-loading-bar");
-        const progressBarFull = document.querySelector("#unity-progress-bar-full");
-        const statusText = document.querySelector("#status-text");
-
-        const script = document.createElement("script");
-        script.src = buildUrl + "/Granny 2_web.loader.js";
-
-        script.onload = () => {
-            createUnityInstance(canvas, {
-                dataUrl: buildUrl + "/Granny 2_web.data",
-                frameworkUrl: buildUrl + "/Granny 2_web.framework.js",
-                codeUrl: buildUrl + "/Granny 2_web.wasm",
-                streamingAssetsUrl: "StreamingAssets",
-                companyName: "NULL",
-                productName: "Granny 2",
-                productVersion: "1.0",
-                // CRITICAL FIX: Tells Unity NOT to look for compressed versions
-                matchWebGLToCanvasSize: true,
-                devicePixelRatio: 1,
-            }, (progress) => {
-                progressBarFull.style.width = (100 * progress) + "%";
-            }).then(() => {
-                loadingBar.style.display = "none";
-            }).catch((err) => {
-                console.error(err);
-                statusText.innerText = "STREAM INTERRUPTED";
-            });
+        // Tell the game that the SDK is "ready" even if it's not on Yandex
+        window.ysdk = window.parent.ysdk || {
+            getLanguage: () => 'en',
+            features: { LoadingProgress: { set: () => {} } },
+            stats: { isCoreLoaded: () => true }
         };
-
-        document.body.appendChild(script);
     </script>
 </body>
 </html>
