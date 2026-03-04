@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <title>Granny 2 | Full Bypass</title>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #000; color: white; font-family: sans-serif; }
+        #unity-container { position: absolute; width: 100%; height: 100%; }
+        #unity-canvas { width: 100%; height: 100%; background: #000; }
+        #status { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    </style>
+</head>
+<body>
+
+    <div id="status">Bypassing Checks...</div>
+    <div id="unity-container">
+        <canvas id="unity-canvas"></canvas>
+    </div>
+
+    <script>
+        // --- GHOST SDK: Pretends to be the Ad Networks so the game starts ---
+        window.SDK_OPTIONS = { gameId: "clean_version", onEvent: () => {} };
+        window.YaGames = { init: () => Promise.resolve({ getPlayer: () => Promise.resolve({}) }) };
+        window.sdk = { showBanner: () => console.log("Ad Blocked") };
+        
+        const canvas = document.querySelector("#unity-canvas");
+        const status = document.querySelector("#status");
+
+        async function mergeFiles(parts) {
+            const blobs = await Promise.all(parts.map(async (p) => {
+                const r = await fetch(p);
+                return await r.blob();
+            }));
+            return URL.createObjectURL(new Blob(blobs));
+        }
+
+        async function start() {
+            const build = "https://cdn.jsdelivr.net/gh/forms-docs-slides-glgl/ngng@main/Build";
+            try {
+                const [dataUrl, wasmUrl] = await Promise.all([
+                    mergeFiles([`${build}/Granny 2_
