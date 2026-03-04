@@ -18,7 +18,6 @@
         }
 
         body {
-            /* Background: Black with whiter/lighter center glow */
             background: radial-gradient(circle at center, #333333 0%, #000000 100%);
             height: 100vh;
             display: flex;
@@ -30,7 +29,6 @@
             transition: opacity 0.5s ease;
         }
 
-        /* --- Menu Section --- */
         #menu-ui {
             text-align: center;
             display: flex;
@@ -103,7 +101,6 @@
             text-transform: uppercase;
         }
 
-        /* Chapter Selector Buttons */
         .chapter-selection {
             display: flex;
             gap: 10px;
@@ -137,7 +134,6 @@
             margin-bottom: 30px;
         }
 
-        /* --- The Button --- */
         .play-btn {
             background: rgba(255, 255, 255, 0.05);
             color: #aaaaaa;
@@ -158,7 +154,6 @@
             box-shadow: 0 0 20px rgba(0, 116, 217, 0.6);
         }
 
-        /* --- Game Player Overlay --- */
         #game-container {
             position: fixed;
             top: 0; left: 0;
@@ -174,7 +169,6 @@
             border: none;
         }
 
-        /* --- Back Button --- */
         .back-bar {
             background: #0a0a0a;
             padding: 10px 20px;
@@ -221,6 +215,7 @@
                     <div class="chapter-selection" onclick="event.stopPropagation()">
                         <button class="chap-btn active" onclick="selectChapter(1, this)">CH 1</button>
                         <button class="chap-btn" onclick="selectChapter(2, this)">CH 2</button>
+                        <button class="chap-btn" onclick="selectChapter(3, this)">CH 3</button>
                     </div>
                     <span class="sub-text" id="chapter-label">CHAPTER ONE</span>
                     <div class="play-btn" onclick="launchGranny()">LAUNCH</div>
@@ -262,11 +257,17 @@
             selectedChapter = chap;
             document.querySelectorAll('.chap-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            document.getElementById('chapter-label').innerText = chap === 1 ? "CHAPTER ONE" : "CHAPTER TWO";
+            
+            // Updated Label Logic for 3 Chapters
+            const labels = ["", "CHAPTER ONE", "CHAPTER TWO", "CHAPTER THREE"];
+            document.getElementById('chapter-label').innerText = labels[chap];
         }
 
         function launchGranny() {
-            const url = selectedChapter === 1 ? 'granny.html' : 'granny2.html';
+            // Logic for all 3 chapters
+            let url = 'granny.html';
+            if (selectedChapter === 2) url = 'granny2.html';
+            if (selectedChapter === 3) url = 'granny3.html';
             launchGame(url);
         }
 
