@@ -49,26 +49,3 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
     <script>
-        // CRITICAL: Define the ysdk object here so the granny.html file can find it
-        window.ysdk = {
-            getLanguage: () => 'en',
-            features: { LoadingProgress: { set: () => {} } },
-            stats: { isCoreLoaded: () => true }
-        };
-
-        VanillaTilt.init(document.querySelectorAll(".game-card"), { reverse: true, max: 3, speed: 2000, glare: true, "max-glare": 0.2 });
-
-        function launchGame(url) {
-            document.getElementById('menu-ui').classList.add('menu-hidden');
-            document.getElementById('game-container').style.display = 'flex';
-            document.getElementById('game-frame').src = url; 
-        }
-
-        function closeGame() {
-            document.getElementById('menu-ui').classList.remove('menu-hidden');
-            document.getElementById('game-container').style.display = 'none';
-            document.getElementById('game-frame').src = ''; 
-        }
-    </script>
-</body>
-</html>
