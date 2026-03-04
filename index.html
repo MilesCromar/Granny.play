@@ -70,7 +70,7 @@
 
         .game-card {
             background: rgba(255, 255, 255, 0.05);
-            width: 280px; /* Adjusted slightly to fit 3 cards better */
+            width: 280px; 
             height: 400px;
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -188,6 +188,16 @@
 </head>
 <body>
 
+    <script>
+        window.ysdk = {
+            getLanguage: function() { return 'en'; },
+            features: { LoadingProgress: { set: function(v) {} } },
+            stats: { isCoreLoaded: function() { return true; } },
+            adv: { showFullscreenAdv: function(c) { if(c && c.callbacks) c.callbacks.onClose(); } }
+        };
+        window.YaGames = { init: function() { return Promise.resolve(window.ysdk); } };
+    </script>
+
     <div id="menu-ui">
         <div class="header-text">
             <h1>NULL</h1>
@@ -230,7 +240,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
     <script>
-        // Physics/Tilt Effect
         VanillaTilt.init(document.querySelectorAll(".game-card"), {
             reverse: true,
             max: 3,
@@ -243,7 +252,16 @@
         function launchGame(url) {
             document.getElementById('menu-ui').classList.add('menu-hidden');
             document.getElementById('game-container').style.display = 'flex';
-            document.getElementById('game-frame').src = url; 
+            const frame = document.getElementById('game-frame');
+            frame.src = url; 
+
+            // Forced injection after load to ensure the frame sees the SDK
+            frame.onload = function() {
+                try {
+                    frame.contentWindow.ysdk = window.ysdk;
+                    frame.contentWindow.YaGames = window.YaGames;
+                } catch(e) { console.warn("External domain detected; relying on URL parameters."); }
+            };
         }
 
         function closeGame() {
