@@ -18,7 +18,6 @@
             align-items: center;
         }
 
-        /* Matches Exit button exactly */
         .btn-top-left {
             position: absolute; top: 20px; left: 20px;
             color: #666; text-decoration: none; font-size: 0.7rem; font-weight: bold;
@@ -26,7 +25,7 @@
             transition: 0.3s;
             background: transparent;
             text-transform: uppercase;
-            z-index: 101; 
+            z-index: 10; 
         }
         .btn-top-left:hover { color: #fff; border-color: #0074D9; box-shadow: 0 0 10px rgba(0, 116, 217, 0.4); }
 
@@ -80,19 +79,31 @@
             box-shadow: 0 0 15px rgba(0, 116, 217, 0.5);
         }
 
-        #game-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; display: none; flex-direction: column; z-index: 100; }
-        iframe { width: 100%; height: 100%; border: none; background: #000; flex-grow: 1; }
+        #game-container { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            background: #000; display: none; flex-direction: column; z-index: 100; 
+        }
         
         .back-bar { 
             background: #000; 
-            height: 60px; 
+            height: 65px; 
+            width: 100%;
             position: relative;
+            z-index: 110;
             border-bottom: 1px solid #111; 
         }
+
+        /* The button inside the game view stays visible */
+        .back-bar .btn-top-left {
+            position: absolute;
+            top: 20px; left: 20px;
+        }
+
+        iframe { width: 100%; height: calc(100% - 65px); border: none; background: #000; }
     </style>
 </head>
 <body>
-    <a href="index.html" class="btn-top-left">← EXIT LIBRARY</a>
+    <a href="index.html" class="btn-top-left" id="exit-lib">← EXIT LIBRARY</a>
     <div class="header-text"><h1>LIBRARY</h1></div>
 
     <div class="card-container">
@@ -146,11 +157,19 @@
         }
 
         function launchGranny() { launchGame(selectedChapter === 1 ? 'granny.html' : 'granny2.html'); }
+        
         function launchGame(url) {
+            // Hide the exit button
+            document.getElementById('exit-lib').style.display = 'none';
+            // Open the game
             document.getElementById('game-container').style.display = 'flex';
             document.getElementById('game-frame').src = url;
         }
+
         function closeGame() {
+            // Bring the exit button back
+            document.getElementById('exit-lib').style.display = 'block';
+            // Close the game
             document.getElementById('game-container').style.display = 'none';
             document.getElementById('game-frame').src = '';
         }
