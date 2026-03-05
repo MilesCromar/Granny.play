@@ -154,11 +154,12 @@
             box-shadow: 0 0 20px rgba(0, 116, 217, 0.6);
         }
 
+        /* --- Updated for Blackout --- */
         #game-container {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: #000;
+            background: #000000 !important;
             display: none;
             flex-direction: column;
             z-index: 100;
@@ -167,6 +168,7 @@
         iframe {
             width: 100%; height: 100%;
             border: none;
+            background-color: #000000 !important;
         }
 
         .back-bar {
@@ -224,7 +226,7 @@
             <div class="game-card" onclick="launchGame('pvz.html')">
                 <div class="card-content" style="pointer-events: none;">
                     <h2>Plants vs Zombies</h2>
-                    <br>
+                    <br><br>
                     <span class="sub-text">STRATEGY GAME</span>
                     <div class="play-btn">LAUNCH</div>
                 </div>
@@ -233,7 +235,7 @@
             <div class="game-card" onclick="launchGame('spacewaves.html')">
                 <div class="card-content" style="pointer-events: none;">
                     <h2>Space Waves</h2>
-                    <br>
+                    <br><br>
                     <span class="sub-text">GEOMETRY GAME</span>
                     <div class="play-btn">LAUNCH</div>
                 </div>
