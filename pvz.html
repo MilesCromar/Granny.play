@@ -6,25 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
     <style>
-        /* Force the absolute dark to prevent blinding white bars */
+        /* Force total darkness on all layers */
+        * {
+            background-color: #000000 !important;
+        }
+
         html, body {
             margin: 0 !important;
             padding: 0 !important;
             width: 100% !important;
             height: 100% !important;
-            background-color: #000000 !important; /* Pure black */
+            background: #000000 !important;
             overflow: hidden !important;
-            display: block !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
         }
 
-        #player {
+        #player-container {
             width: 100vw;
             height: 100vh;
-            display: block;
+            background: #000000 !important;
         }
 
-        /* This targets the Ruffle element directly to force its background black */
         ruffle-player {
+            width: 100% !important;
+            height: 100% !important;
+            /* This forces the Ruffle internal canvas to black */
             --background-color: #000000 !important;
         }
     </style>
@@ -39,13 +47,13 @@
             const player = ruffle.createPlayer();
             const container = document.getElementById("player-container");
             container.appendChild(player);
-            player.id = "player";
             
             player.load({
                 url: "https://cdn.jsdelivr.net/gh/sasa24s/Sphere-compile@95d1d98dc38a920d02e6bbcf61620501b2bacfcb/tables/pvz_9_15.swf",
                 allowScriptAccess: true,
                 scale: 'showAll',
-                letterbox: 'on',
+                letterbox: 'on', 
+                forceScale: true,
                 backgroundColor: '#000000'
             });
         });
