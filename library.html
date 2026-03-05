@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NULL | Library</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; cursor: default; }
         body {
             background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
             min-height: 100vh;
@@ -20,34 +19,63 @@
             position: absolute; top: 20px; left: 20px;
             color: #666; text-decoration: none; font-size: 0.7rem; font-weight: bold;
             border: 1px solid #333; padding: 5px 15px; border-radius: 4px;
+            transition: 0.3s;
         }
-        .header-text h1 { letter-spacing: 10px; margin-bottom: 40px; color: #fff; }
+        .back-home:hover { color: #fff; border-color: #0074D9; }
+
+        .header-text h1 { letter-spacing: 10px; margin-bottom: 40px; color: #fff; text-transform: uppercase; }
         
         .card-container {
             display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; max-width: 1200px; perspective: 1000px;
         }
 
-        /* --- New Square Card Style --- */
+        /* --- Square Card Style --- */
         .game-card {
             background: rgba(255, 255, 255, 0.03);
-            width: 250px; height: 250px; /* Square size */
-            border-radius: 10px;
+            width: 260px; height: 260px; 
+            border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             cursor: pointer; transition: all 0.4s ease; transform-style: preserve-3d;
+            padding: 20px;
         }
         .game-card:hover { border-color: #0074D9; background: rgba(0, 31, 63, 0.3); }
 
-        .card-content h2 { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; text-align: center;}
-        .sub-text { font-size: 0.6rem; color: #666; letter-spacing: 2px; display: block; margin-top: 10px;}
+        .card-content { text-align: center; transform: translateZ(20px); width: 100%; }
+        .card-content h2 { font-size: 1.3rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .sub-text { font-size: 0.7rem; color: #666; letter-spacing: 2px; display: block; margin-bottom: 15px; text-transform: uppercase; }
 
-        /* --- Chapter Buttons Inside Square --- */
-        .chapter-selection { display: flex; gap: 5px; margin-bottom: 10px; }
+        /* --- Original Style Chapter Buttons --- */
+        .chapter-selection { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; }
         .chap-btn { 
-            background: #111; border: 1px solid #333; color: #555; 
-            font-size: 0.6rem; padding: 3px 8px; cursor: pointer; 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            color: #666; 
+            font-size: 0.65rem; padding: 4px 10px; cursor: pointer; 
+            font-weight: bold; border-radius: 4px; transition: 0.3s;
         }
-        .chap-btn.active { border-color: #0074D9; color: #fff; }
+        .chap-btn.active { border-color: #0074D9; color: #fff; background: rgba(0, 116, 217, 0.2); }
+
+        /* --- Launch Button (Glow on Hover) --- */
+        .launch-btn {
+            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #888;
+            padding: 8px 25px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .game-card:hover .launch-btn {
+            color: #fff;
+            border-color: #0074D9;
+            background: #001f3f;
+            box-shadow: 0 0 15px rgba(0, 116, 217, 0.5);
+        }
 
         /* --- Overlay Fixes --- */
         #game-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; display: none; flex-direction: column; z-index: 100; }
@@ -60,15 +88,15 @@
     <div class="header-text"><h1>LIBRARY</h1></div>
 
     <div class="card-container">
-        <div class="game-card" id="granny-card">
+        <div class="game-card">
             <div class="card-content">
                 <h2>Granny</h2>
                 <div class="chapter-selection" onclick="event.stopPropagation()">
                     <button class="chap-btn active" onclick="selectChapter(1, this)">CH 1</button>
                     <button class="chap-btn" onclick="selectChapter(2, this)">CH 2</button>
                 </div>
-                <div class="chap-btn" style="border:none; pointer-events:none;" id="chapter-label">CHAPTER ONE</div>
-                <div class="chap-btn" style="margin-top:10px; color:#fff; border-color:#0074D9" onclick="launchGranny()">LAUNCH</div>
+                <span class="sub-text" id="chapter-label">CHAPTER ONE</span>
+                <div class="launch-btn" onclick="launchGranny()">LAUNCH</div>
             </div>
         </div>
 
@@ -76,6 +104,7 @@
             <div class="card-content">
                 <h2>PvZ</h2>
                 <span class="sub-text">STRATEGY</span>
+                <div class="launch-btn">LAUNCH</div>
             </div>
         </div>
 
@@ -83,25 +112,27 @@
             <div class="card-content">
                 <h2>Run 3</h2>
                 <span class="sub-text">ACTION</span>
+                <div class="launch-btn">LAUNCH</div>
             </div>
         </div>
     </div>
 
     <div id="game-container">
-        <div class="back-bar"><div class="chap-btn" onclick="closeGame()">← BACK TO LIBRARY</div></div>
+        <div class="back-bar"><div class="chap-btn active" onclick="closeGame()">← BACK TO LIBRARY</div></div>
         <iframe id="game-frame" src="" allowtransparency="true"></iframe>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
     <script>
-        VanillaTilt.init(document.querySelectorAll(".game-card"), { max: 10, speed: 400, glare: true, "max-glare": 0.2 });
+        VanillaTilt.init(document.querySelectorAll(".game-card"), { max: 8, speed: 400, glare: true, "max-glare": 0.2 });
 
         let selectedChapter = 1;
         function selectChapter(chap, btn) {
             selectedChapter = chap;
-            document.querySelectorAll('.chap-btn').forEach(b => b.classList.remove('active'));
+            const parent = btn.closest('.card-content');
+            parent.querySelectorAll('.chap-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            document.getElementById('chapter-label').innerText = chap === 1 ? "CHAPTER ONE" : "CHAPTER TWO";
+            parent.querySelector('#chapter-label').innerText = chap === 1 ? "CHAPTER ONE" : "CHAPTER TWO";
         }
 
         function launchGranny() { launchGame(selectedChapter === 1 ? 'granny.html' : 'granny2.html'); }
