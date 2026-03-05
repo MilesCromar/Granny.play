@@ -65,6 +65,8 @@
             display: flex;
             gap: 25px;
             perspective: 1000px;
+            flex-wrap: wrap; /* Keeps things neat when you add more games */
+            justify-content: center;
         }
 
         .game-card {
@@ -237,6 +239,15 @@
                     <h2>Space Waves</h2>
                     <br><br>
                     <span class="sub-text">GEOMETRY GAME</span>
+                    <div class="play-btn">LAUNCH</div>
+                </div>
+            </div>
+
+            <div class="game-card" onclick="launchGame('run3.html')">
+                <div class="card-content" style="pointer-events: none;">
+                    <h2>Run 3</h2>
+                    <br><br>
+                    <span class="sub-text">GALAXY RUNNER</span>
                     <div class="play-btn">LAUNCH</div>
                 </div>
             </div>
