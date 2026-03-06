@@ -29,6 +29,18 @@
         }
         .btn-top-left:hover { color: #fff; border-color: #0074D9; box-shadow: 0 0 10px rgba(0, 116, 217, 0.4); }
 
+        .btn-top-right {
+            position: absolute; top: 20px; right: 20px;
+            color: #666; text-decoration: none; font-size: 0.7rem; font-weight: bold;
+            border: 1px solid #333; padding: 5px 15px; border-radius: 4px;
+            transition: 0.3s;
+            background: transparent;
+            text-transform: uppercase;
+            z-index: 10;
+            cursor: pointer;
+        }
+        .btn-top-right:hover { color: #fff; border-color: #0074D9; box-shadow: 0 0 10px rgba(0, 116, 217, 0.4); }
+
         .header-text h1 { letter-spacing: 10px; margin-bottom: 40px; color: #fff; text-transform: uppercase; }
         
         .card-container {
@@ -146,8 +158,9 @@
     <div id="game-container">
         <div class="back-bar">
             <button class="btn-top-left" onclick="closeGame()">← BACK TO LIBRARY</button>
+            <button class="btn-top-right" onclick="toggleFullscreen()">FULLSCREEN</button>
         </div>
-        <iframe id="game-frame" src="" allowtransparency="true"></iframe>
+        <iframe id="game-frame" src="" allowfullscreen="true" allowtransparency="true"></iframe>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
@@ -175,6 +188,16 @@
             document.getElementById('exit-lib').style.display = 'block';
             document.getElementById('game-container').style.display = 'none';
             document.getElementById('game-frame').src = '';
+            if (document.fullscreenElement) document.exitFullscreen();
+        }
+
+        function toggleFullscreen() {
+            const elem = document.getElementById('game-container');
+            if (!document.fullscreenElement) {
+                elem.requestFullscreen().catch(err => alert(`Error: ${err.message}`));
+            } else {
+                document.exitFullscreen();
+            }
         }
     </script>
 </body>
