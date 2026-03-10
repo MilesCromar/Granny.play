@@ -5,121 +5,179 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NULL | Library</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 font-family=%22Inter, Arial, sans-serif%22 font-weight=%22900%22 fill=%22white%22>N</text></svg>">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap" rel="stylesheet">
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; cursor: default; }
         body {
-            background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+            background: #000;
             min-height: 100vh;
             color: #eee;
-            padding: 40px;
+            padding: 50px 40px 40px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
         .btn-top-left {
-            position: absolute; top: 20px; left: 20px;
-            color: #666; text-decoration: none; font-size: 0.7rem; font-weight: bold;
-            border: 1px solid #333; padding: 5px 15px; border-radius: 4px;
-            transition: 0.3s;
+            position: absolute; top: 22px; left: 22px;
+            color: #555; text-decoration: none; font-size: 0.7rem; font-weight: 700;
+            border: 1px solid #2a2a2a; padding: 6px 16px; border-radius: 6px;
+            transition: all 0.3s ease;
             background: transparent;
             text-transform: uppercase;
-            z-index: 10; 
+            letter-spacing: 1px;
+            z-index: 10;
         }
-        .btn-top-left:hover { color: #fff; border-color: #0074D9; box-shadow: 0 0 10px rgba(0, 116, 217, 0.4); }
+        .btn-top-left:hover { color: #fff; border-color: #0074D9; box-shadow: 0 0 12px rgba(0, 116, 217, 0.3); }
 
         .btn-top-right {
-            position: absolute; top: 20px; right: 20px;
-            color: #666; text-decoration: none; font-size: 0.7rem; font-weight: bold;
-            border: 1px solid #333; padding: 5px 15px; border-radius: 4px;
-            transition: 0.3s;
+            position: absolute; top: 22px; right: 22px;
+            color: #555; text-decoration: none; font-size: 0.7rem; font-weight: 700;
+            border: 1px solid #2a2a2a; padding: 6px 16px; border-radius: 6px;
+            transition: all 0.3s ease;
             background: transparent;
             text-transform: uppercase;
+            letter-spacing: 1px;
             z-index: 10;
             cursor: pointer;
         }
-        .btn-top-right:hover { color: #fff; border-color: #0074D9; box-shadow: 0 0 10px rgba(0, 116, 217, 0.4); }
+        .btn-top-right:hover { color: #fff; border-color: #0074D9; box-shadow: 0 0 12px rgba(0, 116, 217, 0.3); }
 
-        .header-text h1 { letter-spacing: 10px; margin-bottom: 40px; color: #fff; text-transform: uppercase; }
-        
+        .header-text {
+            text-align: center;
+            margin-bottom: 45px;
+            opacity: 0;
+            animation: fadeIn 0.6s ease forwards;
+        }
+        .header-text h1 {
+            letter-spacing: 10px; margin-right: -10px; margin-bottom: 12px;
+            color: #fff; text-transform: uppercase; font-size: 1.8rem; font-weight: 900;
+        }
+        .header-underline {
+            width: 40px; height: 2px;
+            background: linear-gradient(90deg, transparent, #0074D9, transparent);
+            margin: 0 auto; border-radius: 1px;
+        }
+
         .card-container {
-            display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; max-width: 1200px; perspective: 1000px;
+            display: flex; gap: 25px; flex-wrap: wrap; justify-content: center; max-width: 1200px; perspective: 1000px;
         }
 
         .game-card {
-            background: rgba(255, 255, 255, 0.03);
-            width: 260px; height: 260px; 
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.02);
+            width: 240px; height: 240px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             cursor: pointer; transition: all 0.4s ease; transform-style: preserve-3d;
             padding: 20px;
+            opacity: 0;
+            animation: cardIn 0.5s ease forwards;
         }
-        .game-card:hover { border-color: #0074D9; background: rgba(0, 31, 63, 0.3); }
+        .game-card:nth-child(1) { animation-delay: 0.1s; }
+        .game-card:nth-child(2) { animation-delay: 0.2s; }
+        .game-card:nth-child(3) { animation-delay: 0.3s; }
+        .game-card:nth-child(4) { animation-delay: 0.4s; }
+        .game-card:nth-child(5) { animation-delay: 0.5s; }
+
+        .game-card:hover {
+            border-color: rgba(0, 116, 217, 0.6);
+            background: linear-gradient(180deg, rgba(0, 31, 63, 0.1) 0%, rgba(0, 31, 63, 0.35) 100%);
+            box-shadow: 0 0 25px rgba(0, 116, 217, 0.15), inset 0 0 30px rgba(0, 116, 217, 0.05);
+        }
 
         .card-content { text-align: center; transform: translateZ(20px); width: 100%; }
-        .card-content h2 { font-size: 1.3rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-        .sub-text { font-size: 0.7rem; color: #666; letter-spacing: 2px; display: block; margin-bottom: 15px; text-transform: uppercase; }
+        .card-content h2 { font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; font-weight: 800; }
+        .sub-text { font-size: 0.65rem; color: #555; letter-spacing: 2.5px; display: block; margin-bottom: 15px; text-transform: uppercase; font-weight: 700; }
 
         .chapter-selection { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; }
-        .chap-btn { 
-            background: rgba(255, 255, 255, 0.05); 
-            border: 1px solid rgba(255, 255, 255, 0.2); 
-            color: #666; 
-            font-size: 0.65rem; padding: 4px 10px; cursor: pointer; 
-            font-weight: bold; border-radius: 4px; transition: 0.3s;
+        .chap-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #555;
+            font-size: 0.6rem; padding: 4px 10px; cursor: pointer;
+            font-weight: 700; border-radius: 5px; transition: 0.3s;
+            letter-spacing: 0.5px;
         }
-        .chap-btn.active { border-color: #0074D9; color: #fff; background: rgba(0, 116, 217, 0.2); }
+        .chap-btn.active { border-color: #0074D9; color: #fff; background: rgba(0, 116, 217, 0.15); }
 
         .launch-btn {
             margin-top: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            color: #888;
+            background: rgba(255, 255, 255, 0.03);
+            color: #666;
             padding: 8px 25px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 800;
-            letter-spacing: 2px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
+            letter-spacing: 2.5px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 6px;
             transition: all 0.3s ease;
         }
         .game-card:hover .launch-btn {
             color: #fff;
-            border-color: #0074D9;
-            background: #001f3f;
-            box-shadow: 0 0 15px rgba(0, 116, 217, 0.5);
+            border-color: rgba(0, 116, 217, 0.7);
+            background: linear-gradient(135deg, #001f3f, rgba(0, 116, 217, 0.2));
+            box-shadow: 0 0 18px rgba(0, 116, 217, 0.35);
         }
 
-        #game-container { 
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-            background: #000; display: none; flex-direction: column; z-index: 100; 
+        #game-container {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000; flex-direction: column; z-index: 100;
+            opacity: 0;
+            display: none;
+            transition: opacity 0.3s ease;
         }
-        
-        .back-bar { 
-            background: #000; 
-            height: 65px; 
+        #game-container.visible {
+            display: flex;
+            opacity: 1;
+        }
+
+        .back-bar {
+            background: #000;
+            height: 50px;
             width: 100%;
             position: relative;
             z-index: 110;
-            border-bottom: 1px solid #111; 
+            border-bottom: 1px solid #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 22px;
         }
 
-        /* NEW: Hide the bar when in fullscreen mode */
         #game-container:fullscreen .back-bar { display: none; }
         #game-container:fullscreen iframe { height: 100vh; }
 
-        .back-bar .btn-top-left {
-            position: absolute;
-            top: 20px; left: 20px;
+        .back-bar button {
+            position: static;
+            color: #555; font-size: 0.7rem; font-weight: 700;
+            border: 1px solid #2a2a2a; padding: 6px 16px; border-radius: 6px;
+            transition: all 0.3s ease;
+            background: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
         }
+        .back-bar button:hover { color: #fff; border-color: #0074D9; box-shadow: 0 0 12px rgba(0, 116, 217, 0.3); }
 
-        iframe { width: 100%; height: calc(100% - 65px); border: none; background: #000; }
+        iframe { width: 100%; height: calc(100% - 50px); border: none; background: #000; }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
-    <a href="index.html" class="btn-top-left" id="exit-lib">← EXIT LIBRARY</a>
-    <div class="header-text"><h1>LIBRARY</h1></div>
+    <a href="index.html" class="btn-top-left" id="exit-lib">← EXIT</a>
+    <div class="header-text">
+        <h1>LIBRARY</h1>
+        <div class="header-underline"></div>
+    </div>
 
     <div class="card-container">
         <div class="game-card">
@@ -169,15 +227,15 @@
 
     <div id="game-container">
         <div class="back-bar">
-            <button class="btn-top-left" onclick="closeGame()">← BACK TO LIBRARY</button>
-            <button class="btn-top-right" onclick="toggleFullscreen()">FULLSCREEN</button>
+            <button onclick="closeGame()">← BACK</button>
+            <button onclick="toggleFullscreen()">FULLSCREEN</button>
         </div>
         <iframe id="game-frame" src="" allowfullscreen="true" allowtransparency="true"></iframe>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
     <script>
-        VanillaTilt.init(document.querySelectorAll(".game-card"), { max: 8, speed: 400, glare: true, "max-glare": 0.2 });
+        VanillaTilt.init(document.querySelectorAll(".game-card"), { max: 8, speed: 400, glare: true, "max-glare": 0.15 });
 
         let selectedChapter = 1;
         function selectChapter(chap, btn) {
@@ -189,17 +247,25 @@
         }
 
         function launchGranny() { launchGame(selectedChapter === 1 ? 'granny.html' : 'granny2.html'); }
-        
+
         function launchGame(url) {
             document.getElementById('exit-lib').style.display = 'none';
-            document.getElementById('game-container').style.display = 'flex';
+            const container = document.getElementById('game-container');
+            container.style.display = 'flex';
+            // Trigger reflow so the opacity transition works
+            container.offsetHeight;
+            container.classList.add('visible');
             document.getElementById('game-frame').src = url;
         }
 
         function closeGame() {
             document.getElementById('exit-lib').style.display = 'block';
-            document.getElementById('game-container').style.display = 'none';
-            document.getElementById('game-frame').src = '';
+            const container = document.getElementById('game-container');
+            container.classList.remove('visible');
+            setTimeout(() => {
+                container.style.display = 'none';
+                document.getElementById('game-frame').src = '';
+            }, 300);
             if (document.fullscreenElement) document.exitFullscreen();
         }
 
