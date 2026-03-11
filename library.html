@@ -61,8 +61,19 @@
         }
 
         .card-container {
-            display: flex; gap: 25px; flex-wrap: wrap; justify-content: center; max-width: 1200px; perspective: 1000px;
+            display: flex; gap: 25px; flex-wrap: wrap; justify-content: center; max-width: 1200px;
         }
+
+        .game-card-wrapper {
+            perspective: 800px;
+            opacity: 0;
+            animation: cardFadeIn 0.5s ease forwards;
+        }
+        .game-card-wrapper:nth-child(1) { animation-delay: 0.1s; }
+        .game-card-wrapper:nth-child(2) { animation-delay: 0.2s; }
+        .game-card-wrapper:nth-child(3) { animation-delay: 0.3s; }
+        .game-card-wrapper:nth-child(4) { animation-delay: 0.4s; }
+        .game-card-wrapper:nth-child(5) { animation-delay: 0.5s; }
 
         .game-card {
             background: rgba(255, 255, 255, 0.02);
@@ -70,16 +81,27 @@
             border-radius: 14px;
             border: 1px solid rgba(255, 255, 255, 0.07);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            cursor: pointer; transition: all 0.4s ease; transform-style: preserve-3d;
+            cursor: pointer;
+            transition: border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+            transform-style: preserve-3d;
             padding: 20px;
-            opacity: 0;
-            animation: cardIn 0.5s ease forwards;
+            position: relative;
+            overflow: hidden;
         }
-        .game-card:nth-child(1) { animation-delay: 0.1s; }
-        .game-card:nth-child(2) { animation-delay: 0.2s; }
-        .game-card:nth-child(3) { animation-delay: 0.3s; }
-        .game-card:nth-child(4) { animation-delay: 0.4s; }
-        .game-card:nth-child(5) { animation-delay: 0.5s; }
+
+        /* Steam-style shine/glare overlay */
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.06) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            border-radius: 14px;
+            z-index: 1;
+        }
+        .game-card:hover::before { opacity: 1; }
 
         .game-card:hover {
             border-color: rgba(0, 116, 217, 0.6);
@@ -87,7 +109,7 @@
             box-shadow: 0 0 25px rgba(0, 116, 217, 0.15), inset 0 0 30px rgba(0, 116, 217, 0.05);
         }
 
-        .card-content { text-align: center; transform: translateZ(20px); width: 100%; }
+        .card-content { text-align: center; transform: translateZ(20px); width: 100%; position: relative; z-index: 2; }
         .card-content h2 { font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; font-weight: 800; }
         .sub-text { font-size: 0.65rem; color: #555; letter-spacing: 2.5px; display: block; margin-bottom: 15px; text-transform: uppercase; font-weight: 700; }
 
@@ -166,7 +188,7 @@
         @keyframes fadeIn {
             to { opacity: 1; }
         }
-        @keyframes cardIn {
+        @keyframes cardFadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
@@ -180,47 +202,57 @@
     </div>
 
     <div class="card-container">
-        <div class="game-card">
-            <div class="card-content">
-                <h2>Granny</h2>
-                <div class="chapter-selection" onclick="event.stopPropagation()">
-                    <button class="chap-btn active" onclick="selectChapter(1, this)">CH 1</button>
-                    <button class="chap-btn" onclick="selectChapter(2, this)">CH 2</button>
+        <div class="game-card-wrapper">
+            <div class="game-card">
+                <div class="card-content">
+                    <h2>Granny</h2>
+                    <div class="chapter-selection" onclick="event.stopPropagation()">
+                        <button class="chap-btn active" onclick="selectChapter(1, this)">CH 1</button>
+                        <button class="chap-btn" onclick="selectChapter(2, this)">CH 2</button>
+                    </div>
+                    <span class="sub-text" id="chapter-label">CHAPTER ONE</span>
+                    <div class="launch-btn" onclick="launchGranny()">LAUNCH</div>
                 </div>
-                <span class="sub-text" id="chapter-label">CHAPTER ONE</span>
-                <div class="launch-btn" onclick="launchGranny()">LAUNCH</div>
             </div>
         </div>
 
-        <div class="game-card" onclick="launchGame('pvz.html')">
-            <div class="card-content">
-                <h2>PvZ</h2>
-                <span class="sub-text">STRATEGY</span>
-                <div class="launch-btn">LAUNCH</div>
+        <div class="game-card-wrapper">
+            <div class="game-card" onclick="launchGame('pvz.html')">
+                <div class="card-content">
+                    <h2>PvZ</h2>
+                    <span class="sub-text">STRATEGY</span>
+                    <div class="launch-btn">LAUNCH</div>
+                </div>
             </div>
         </div>
 
-        <div class="game-card" onclick="launchGame('run3.html')">
-            <div class="card-content">
-                <h2>Run 3</h2>
-                <span class="sub-text">ACTION</span>
-                <div class="launch-btn">LAUNCH</div>
+        <div class="game-card-wrapper">
+            <div class="game-card" onclick="launchGame('run3.html')">
+                <div class="card-content">
+                    <h2>Run 3</h2>
+                    <span class="sub-text">ACTION</span>
+                    <div class="launch-btn">LAUNCH</div>
+                </div>
             </div>
         </div>
 
-        <div class="game-card" onclick="launchGame('driftboss.html')">
-            <div class="card-content">
-                <h2>Drift Boss</h2>
-                <span class="sub-text">ARCADE</span>
-                <div class="launch-btn">LAUNCH</div>
+        <div class="game-card-wrapper">
+            <div class="game-card" onclick="launchGame('driftboss.html')">
+                <div class="card-content">
+                    <h2>Drift Boss</h2>
+                    <span class="sub-text">ARCADE</span>
+                    <div class="launch-btn">LAUNCH</div>
+                </div>
             </div>
         </div>
 
-        <div class="game-card" onclick="launchGame('spacewaves.html')">
-            <div class="card-content">
-                <h2>Space Waves</h2>
-                <span class="sub-text">ARCADE</span>
-                <div class="launch-btn">LAUNCH</div>
+        <div class="game-card-wrapper">
+            <div class="game-card" onclick="launchGame('spacewaves.html')">
+                <div class="card-content">
+                    <h2>Space Waves</h2>
+                    <span class="sub-text">ARCADE</span>
+                    <div class="launch-btn">LAUNCH</div>
+                </div>
             </div>
         </div>
     </div>
@@ -234,25 +266,44 @@
     </div>
 
     <script>
-        // Custom reverse tilt effect
+        // Steam-style reverse tilt with glare tracking
         document.querySelectorAll('.game-card').forEach(card => {
+            let tiltActive = false;
+
+            card.addEventListener('mouseenter', () => {
+                tiltActive = true;
+                // Remove transform transition on enter so tilt is responsive
+                card.style.transition = 'border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease';
+            });
+
             card.addEventListener('mousemove', e => {
+                if (!tiltActive) return;
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                // Reverse: tilt AWAY from cursor (positive where cursor is)
-                const rotateX = ((y - centerY) / centerY) * 5;
-                const rotateY = ((centerX - x) / centerX) * -5;
-                card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                const w = rect.width;
+                const h = rect.height;
+
+                // Normalized -1 to 1
+                const nx = (x / w - 0.5) * 2;
+                const ny = (y / h - 0.5) * 2;
+
+                // Reverse tilt: card tilts AWAY from cursor
+                const rotateY = nx * -6;
+                const rotateX = ny * 6;
+
+                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+
+                // Move the glare highlight to follow cursor
+                card.style.setProperty('--mouse-x', `${(x / w) * 100}%`);
+                card.style.setProperty('--mouse-y', `${(y / h) * 100}%`);
             });
+
             card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg)';
-                card.style.transition = 'transform 0.4s ease, border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease';
-            });
-            card.addEventListener('mouseenter', () => {
-                card.style.transition = 'border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease';
+                tiltActive = false;
+                // Restore transform transition for smooth reset
+                card.style.transition = 'transform 0.5s ease, border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease';
+                card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
             });
         });
 
